@@ -14,7 +14,7 @@ function App() {
       <div className="min-h-screen bg-gray-100 flex">
         <aside className="w-64 bg-white shadow-md p-5">
           <h2 className="text-2xl font-bold mb-8 text-gray-800">
-            My Dashboard
+            CRUD
           </h2>
 
           <nav className="space-y-3">

@@ -20,17 +20,17 @@ import {
 
 function ManageData() {
  const emptyForm = {
-  corporate: "",
+  corporate: "Tawuniya",
   guid: "",
-  daRequired: "",
-  city: "",
+  daRequired: "Taqdeer",
+  city: "Riyadh",
   provider: "",
-  status: "",
+  status: "Assigned",
   pickupDate: "",
-  pickupTime: "",
+  pickupTime: "08:00",
   customerName: "",
   customerPhone: "",
-  createdBy: "",
+  createdBy: "Ali S",
 }
 
   const [formData, setFormData] = useState(emptyForm)
