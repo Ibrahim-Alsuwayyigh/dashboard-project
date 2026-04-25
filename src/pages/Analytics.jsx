@@ -1,8 +1,43 @@
-import { getDailyStats, getMonthlyStats } from "../services/statsService"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts"
+
+import {
+  getDailyStats,
+  getMonthlyStats,
+} from "../services/statsService"
 
 function Analytics({ orders })  {
  const dailyStats = getDailyStats(orders)
 const monthlyStats = getMonthlyStats()
+const comparisonChartData = [
+  {
+    metric: "Assigned",
+    Daily: dailyStats.assignedRate,
+    Monthly: monthlyStats.assignedRate,
+  },
+  {
+    metric: "Taqdeer",
+    Daily: dailyStats.taqdeerRate,
+    Monthly: monthlyStats.taqdeerRate,
+  },
+  {
+    metric: "Completion",
+    Daily: dailyStats.completionRate,
+    Monthly: monthlyStats.completionRate,
+  },
+  {
+    metric: "Cancelled",
+    Daily: dailyStats.cancelledRate,
+    Monthly: monthlyStats.cancelledRate,
+  },
+]
   const comparisonRows = [
     {
       metric: "Total Orders",
@@ -71,6 +106,34 @@ const monthlyStats = getMonthlyStats()
           </p>
         </div>
       </div>
+      <div className="bg-white rounded-2xl shadow p-6 mt-8">
+  <h2 className="text-xl font-semibold text-gray-800 mb-4">
+    Daily vs Monthly Performance Comparison
+  </h2>
+
+  <div className="h-96">
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={comparisonChartData}>
+        <XAxis dataKey="metric" />
+        <YAxis unit="%" />
+        <Tooltip />
+        <Legend />
+
+        <Bar
+          dataKey="Daily"
+          fill="#3B82F6"
+          radius={[6, 6, 0, 0]}
+        />
+
+        <Bar
+          dataKey="Monthly"
+          fill="#10B981"
+          radius={[6, 6, 0, 0]}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+</div>
 
       <div className="bg-white rounded-2xl shadow p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
