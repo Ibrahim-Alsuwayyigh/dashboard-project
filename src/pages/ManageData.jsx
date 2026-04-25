@@ -11,12 +11,11 @@ import { statusColors } from "../data/badgeColors"
 import { useState } from "react"
 
 import {
-  corporate,
-  provider,
-  daRequiredOptions,
-  cities,
-  pickupTimes,
-} from "../data/formOptions"
+  getOrders,
+  createOrder,
+  updateOrder,
+  deleteOrder,
+} from "../services/orderService"
 
 function ManageData() {
  const emptyForm = {
@@ -37,21 +36,7 @@ function ManageData() {
 
   const [editingId, setEditingId] = useState(null)
 
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      corporate: "Tawuniya",
-      guid: "UWRXZ0L",
-      daRequired: "Taqdeer",
-      city: "Riyadh",
-      provider: "حسن السيد",
-      pickupDate: "2026-04-23",
-      pickupTime: "08:00",
-      customerName: "Ali",
-      customerPhone: "4862",
-      createdBy: "Ali S",
-    },
-  ])
+ const [orders, setOrders] = useState(getOrders())
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -65,23 +50,10 @@ const handleSubmit = (e) => {
   e.preventDefault()
 
   if (editingId) {
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === editingId
-          ? { ...order, ...formData }
-          : order
-      )
-    )
-
+    setOrders((prev) => updateOrder(prev, editingId, formData))
     setEditingId(null)
   } else {
-    setOrders((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        ...formData,
-      },
-    ])
+    setOrders((prev) => createOrder(prev, formData))
   }
 
   setFormData(emptyForm)
@@ -103,9 +75,9 @@ const handleEdit = (order) => {
   setEditingId(order.id)
 }
 
-  const handleDelete = (id) => {
-    setOrders((prev) => prev.filter((order) => order.id !== id))
-  }
+ const handleDelete = (id) => {
+  setOrders((prev) => deleteOrder(prev, id))
+}
 
   return (
     <>

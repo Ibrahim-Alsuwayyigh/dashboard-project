@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { sampleOrders } from "../data/sampleOrders"
+import { getOrders } from "../services/orderService"
 import {
   PieChart,
   Pie,
@@ -18,7 +18,9 @@ function Dashboard() {
   const [daFilter, setDaFilter] = useState("")
   const [providerFilter, setProviderFilter] = useState("")
 
-  const filteredOrders = sampleOrders.filter((order) => {
+  const orders = getOrders()
+
+const filteredOrders = orders.filter((order) =>  {
     return (
       (cityFilter === "" || order.city === cityFilter) &&
       (statusFilter === "" || order.status === statusFilter) &&
@@ -57,6 +59,28 @@ const DA_COLORS = {
   Taqdeer: "#8B5CF6",
   "No Taqdeer": "#6B7280",
 }
+const totalOrders = filteredOrders.length
+
+const assignedCount = filteredOrders.filter(
+  (order) => order.status === "Assigned"
+).length
+
+const completedCount = filteredOrders.filter(
+  (order) => order.status === "Completed"
+).length
+
+const cancelledCount = filteredOrders.filter(
+  (order) => order.status === "Cancelled"
+).length
+
+const taqdeerCount = filteredOrders.filter(
+  (order) => order.daRequired === "Taqdeer"
+).length
+
+const getPercentage = (count) => {
+  if (totalOrders === 0) return 0
+  return Math.round((count / totalOrders) * 100)
+}
 return (
     <>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
@@ -64,36 +88,35 @@ return (
       </h1>
 
       {/* STATS CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-2xl shadow p-5">
-          <h3 className="text-gray-500 text-sm">Total Orders</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">
-            {filteredOrders.length}
-          </p>
-        </div>
+     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <div className="bg-white rounded-2xl shadow p-5">
+    <h3 className="text-gray-500 text-sm">Total Orders</h3>
+    <p className="text-2xl font-bold text-gray-800 mt-2">
+      {totalOrders}
+    </p>
+  </div>
 
-        <div className="bg-white rounded-2xl shadow p-5">
-          <h3 className="text-gray-500 text-sm">Assigned Orders</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">
-            {
-              filteredOrders.filter(
-                (order) => order.status === "Assigned"
-              ).length
-            }
-          </p>
-        </div>
+  <div className="bg-white rounded-2xl shadow p-5">
+    <h3 className="text-gray-500 text-sm">Assigned Rate</h3>
+    <p className="text-2xl font-bold text-blue-600 mt-2">
+      {getPercentage(assignedCount)}%
+    </p>
+  </div>
 
-        <div className="bg-white rounded-2xl shadow p-5">
-          <h3 className="text-gray-500 text-sm">Taqdeer Orders</h3>
-          <p className="text-2xl font-bold text-gray-800 mt-2">
-            {
-              filteredOrders.filter(
-                (order) => order.daRequired === "Taqdeer"
-              ).length
-            }
-          </p>
-        </div>
-      </div>
+  <div className="bg-white rounded-2xl shadow p-5">
+    <h3 className="text-gray-500 text-sm">Taqdeer Rate</h3>
+    <p className="text-2xl font-bold text-purple-600 mt-2">
+      {getPercentage(taqdeerCount)}%
+    </p>
+  </div>
+
+  <div className="bg-white rounded-2xl shadow p-5">
+    <h3 className="text-gray-500 text-sm">Completion Rate</h3>
+    <p className="text-2xl font-bold text-green-600 mt-2">
+      {getPercentage(completedCount)}%
+    </p>
+  </div>
+</div>
 
       {/* FILTER PANEL */}
       <div className="bg-white rounded-2xl shadow p-5 mb-8">
@@ -157,7 +180,7 @@ return (
 >
   Clear Filters
 </button>
-            {[...new Set(sampleOrders.map((o) => o.provider))].map(
+            {[...new Set(orders.map((o) => o.provider))].map(
               (provider) => (
                 <option key={provider} value={provider}>
                   {provider}
