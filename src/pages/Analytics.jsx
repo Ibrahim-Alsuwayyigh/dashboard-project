@@ -11,7 +11,7 @@ import {
 import {
   getDailyStats,
   getMonthlyStats,
-} from "../services/statsService.js"
+} from "../services/stats.js"
 
 function Analytics({ orders })  {
  const dailyStats = getDailyStats(orders)
